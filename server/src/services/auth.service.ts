@@ -1,8 +1,13 @@
 import { Service } from "typedi";
 
 import { AuthDao } from "../daos/";
-import { SignupDto } from "../dtos";
+import { SignupDto, SigninDto } from "../dtos";
 import { IAuthService } from "../types";
+import { 
+    generateHashPassword,
+    compareHashedPassword,
+    generateToken,
+} from "../utils";
 
 @Service()
 export class AuthService implements IAuthService {
@@ -19,12 +24,30 @@ export class AuthService implements IAuthService {
 
         if (findUserById) return null;
 
-        return await this.authDao.signup({
+        password = await generateHashPassword(password);
+
+        const signupUser = await this.authDao.signup({
             email,
             nickname,
             password,
             introduce,
             address,
         });
+
+        return signupUser;
+    }
+
+    async signin({ email, password }: SigninDto) {
+        const user = await this.authDao.findPasswordByEmail(email);
+        const existPassword = await compareHashedPassword(
+            password,
+            user!.password
+        );
+        
+        if (!user || !existPassword) return null;
+
+        const accessToken = await generateToken(user.id, user.nickname);
+
+        return accessToken;
     }
 }

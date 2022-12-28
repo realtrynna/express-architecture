@@ -1,8 +1,6 @@
 import {
     IsString,
-    IsNumber,
     IsEmail,
-    IsBoolean,
     IsNotEmpty,
     MinLength,
     MaxLength,
@@ -15,7 +13,7 @@ export class SignupDto {
     @IsEmail()
     @IsNotEmpty()
     @MinLength(5)
-    @MaxLength(50)
+    @MaxLength(60)
     email: string;
     
     @IsString()
@@ -23,16 +21,22 @@ export class SignupDto {
     @MaxLength(10)
     nickname: string;
     
+    @IsAlphanumeric()
+    @IsNotEmpty()
+    @MinLength(8)
+    @MaxLength(20)
     password: string;
 
-    // @IsString()
-    // @Min(5)
-    // @Max(100)
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(1)
+    @MaxLength(100)
     introduce: string;
 
-    // @IsString()
-    // @Min(5)
-    // @Max(100)
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(5)
+    @MaxLength(50)
     address: string;
 
     constructor({

@@ -1,1 +1,1 @@
-export * from "./auth.daos";
+export * from "./auth.dao";

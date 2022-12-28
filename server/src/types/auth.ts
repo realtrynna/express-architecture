@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import { User, UserMeta } from "@prisma/client";
 
-import { SignupDto, ResponseUserDto } from "../dtos";
+import { 
+    SignupDto, 
+    ResponseUserDto,
+    SigninDto,
+} from "../dtos";
 
 export interface ISignupDto {
     email: string;
@@ -11,19 +14,32 @@ export interface ISignupDto {
     address: string;
 }
 
+export interface ISigninDto {
+    email: string;
+    password: string;
+}
+
+export interface ITokenPayload {
+    id: number;
+    nickname: string;
+}
+
 /**
  * Auth
  */
 export interface IAuthController {
     signup: (req: Request, res: Response) => Promise<Response>;
+    signin: (req: Request, res: Response) => Promise<Response>;
 }
 
 export interface IAuthService {
-    signup: (SignupDto: SignupDto) => Promise<ResponseUserDto | null>;
+    signup: (signupDto: SignupDto) => Promise<ResponseUserDto | null>;
+    signin: (signinDto: SigninDto) => Promise<string | null>;
 }
 
 export interface IAuthDao {
     findUserById: (userId: number) => Promise<ResponseUserDto | null>;
     findUserByEmail: (email: string) => Promise<Pick<ResponseUserDto, "id" | "email" | "nickname"> | null>;
-    signup: (SignupDto: SignupDto) => Promise<ResponseUserDto>;
+    findPasswordByEmail: (email: string) => Promise<any>;
+    signup: (signupDto: SignupDto) => Promise<ResponseUserDto>;
 }
